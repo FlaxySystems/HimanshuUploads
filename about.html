@@ -13,6 +13,11 @@
             font-family: 'Inter', sans-serif;
         }
 
+        body {
+            background: #f8fafc;
+            overflow-x: hidden;
+        }
+
         /* Smooth transitions */
         a, button {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -40,12 +45,59 @@
             }
         }
 
-        .fade-in-up {
-            animation: fadeInUp 0.6s ease-out;
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
-        . fade-in-up-delay-1 { animation-delay: 0.1s; }
-        .fade-in-up-delay-2 { animation-delay: 0. 2s; }
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        @keyframes growWidth {
+            from {
+                width: 0;
+            }
+            to {
+                width: var(--width);
+            }
+        }
+
+        .fade-in-up {
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .slide-in-left {
+            opacity: 0;
+            animation: slideInLeft 0.6s ease-out forwards;
+        }
+
+        .fade-in-up-delay-1 { animation-delay: 0.1s; }
+        .fade-in-up-delay-2 { animation-delay: 0.2s; }
         .fade-in-up-delay-3 { animation-delay: 0.3s; }
 
         /* Button primary style */
@@ -59,6 +111,23 @@
             text-decoration: none;
             border: none;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
         }
 
         .btn-primary:hover {
@@ -76,16 +145,218 @@
 
         /* Stagger animation */
         .stagger-item {
-            animation: fadeInUp 0.6s ease-out;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out forwards;
         }
 
-        . stagger-item:nth-child(1) { animation-delay: 0.1s; }
+        .stagger-item:nth-child(1) { animation-delay: 0.1s; }
         .stagger-item:nth-child(2) { animation-delay: 0.2s; }
-        . stagger-item:nth-child(3) { animation-delay: 0.3s; }
+        .stagger-item:nth-child(3) { animation-delay: 0.3s; }
+
+        /* Mobile Menu - Simple and Reliable */
+        .mobile-menu {
+            display: none;
+        }
+
+        .mobile-menu.active {
+            display: block;
+        }
+
+        /* Hamburger menu animation */
+        .hamburger-line {
+            transition: all 0.3s ease;
+            transform-origin: center;
+        }
+
+        .hamburger.active .hamburger-line:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger.active .hamburger-line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active .hamburger-line:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+
+        /* Floating animation for icons */
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Skill progress bar */
+        .skill-bar {
+            height: 8px;
+            background-color: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .skill-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b35, #ff5722);
+            border-radius: 4px;
+            width: 0;
+            transition: width 1.5s ease-out;
+        }
+
+        /* Team card hover effect */
+        .team-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .team-card::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.05) 0%, rgba(255, 87, 34, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .team-card:hover::after {
+            opacity: 1;
+        }
+
+        /* Back to top button */
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #ff6b35 0%, #ff5722 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            color: #333;
+            padding: 16px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        /* Timeline for skills */
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: linear-gradient(to bottom, #ff6b35, #ff5722);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -34px;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ff6b35;
+            border: 2px solid white;
+            box-shadow: 0 0 0 2px #ff6b35;
+        }
+
+        /* Feature card hover effect */
+        .feature-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.05) 0%, rgba(255, 87, 34, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature-card:hover::after {
+            opacity: 1;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 640px) {
+            .hero-title {
+                font-size: 2.5rem;
+                line-height: 1.2;
+            }
+        }
+
+        /* Ensure content doesn't break at any zoom level */
+        .responsive-container {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+            box-sizing: border-box;
+        }
+
+        .responsive-text {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
-    <!-- Navigation Bar -->
+    <!-- Navigation Bar - IDENTICAL STRUCTURE -->
     <nav class="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
@@ -93,23 +364,39 @@
                     <img src="icon.webp" alt="Himanshu Uploads" class="w-8 h-8">
                     <span class="text-xl font-bold text-gray-900">Himanshu Uploads</span>
                 </div>
-                <div class="hidden md:flex gap-8">
-                    <a href="index.html" class="text-gray-600 hover:text-gray-900 font-medium transition">Home</a>
-                    <a href="downloads.html" class="text-gray-600 hover:text-gray-900 font-medium transition">Downloads</a>
-                    <a href="about.html" class="text-gray-600 hover:text-gray-900 font-medium transition">About</a>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex gap-8 items-center">
+                    <a href="index.html" class="text-gray-600 hover:text-gray-900 font-medium relative group">
+                        Home
+                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-500 to-red-500 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="downloads.html" class="text-gray-600 hover:text-gray-900 font-medium relative group">
+                        Downloads
+                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-500 to-red-500 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="about.html" class="text-gray-600 hover:text-gray-900 font-medium relative group">
+                        About
+                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-500 to-red-500 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
                 </div>
-                <button id="mobile-menu-btn" class="md:hidden text-gray-700">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
+                
+                <!-- Mobile Menu Button - SIMPLIFIED -->
+                <button id="mobile-menu-btn" class="md:hidden text-gray-700 p-2 focus:outline-none">
+                    <div class="hamburger w-6 h-6 flex flex-col justify-center">
+                        <span class="hamburger-line block h-0.5 w-6 bg-gray-700 mb-1"></span>
+                        <span class="hamburger-line block h-0.5 w-6 bg-gray-700 mb-1"></span>
+                        <span class="hamburger-line block h-0.5 w-6 bg-gray-700"></span>
+                    </div>
                 </button>
             </div>
         </div>
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden border-t border-gray-100">
+        
+        <!-- Mobile Menu - SIMPLIFIED -->
+        <div id="mobile-menu" class="mobile-menu md:hidden border-t border-gray-100 bg-white">
             <a href="index.html" class="block px-4 py-3 text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition">Home</a>
             <a href="downloads.html" class="block px-4 py-3 text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition">Downloads</a>
-            <a href="about. html" class="block px-4 py-3 text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition">About</a>
+            <a href="about.html" class="block px-4 py-3 text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition">About</a>
         </div>
     </nav>
 
@@ -139,18 +426,18 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-4xl font-bold text-gray-900 mb-12 text-center fade-in-up">Our Core Values</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="card-hover bg-gray-50 p-8 rounded-lg border border-gray-200 stagger-item">
-                    <div class="text-4xl mb-4">⚡</div>
+                <div class="card-hover bg-gray-50 p-8 rounded-lg border border-gray-200 stagger-item feature-card">
+                    <div class="text-4xl mb-4 float-animation">⚡</div>
                     <h3 class="text-xl font-bold text-gray-900 mb-3">Speed First</h3>
-                    <p class="text-gray-600">Lightning-fast downloads and uploads for all your files. </p>
+                    <p class="text-gray-600">Lightning-fast downloads and uploads for all your files.</p>
                 </div>
-                <div class="card-hover bg-gray-50 p-8 rounded-lg border border-gray-200 stagger-item">
-                    <div class="text-4xl mb-4">🔒</div>
+                <div class="card-hover bg-gray-50 p-8 rounded-lg border border-gray-200 stagger-item feature-card">
+                    <div class="text-4xl mb-4 float-animation" style="animation-delay: 0.5s;">🔒</div>
                     <h3 class="text-xl font-bold text-gray-900 mb-3">Security Always</h3>
                     <p class="text-gray-600">Your files are encrypted and protected with industry-standard security.</p>
                 </div>
-                <div class="card-hover bg-gray-50 p-8 rounded-lg border border-gray-200 stagger-item">
-                    <div class="text-4xl mb-4">✨</div>
+                <div class="card-hover bg-gray-50 p-8 rounded-lg border border-gray-200 stagger-item feature-card">
+                    <div class="text-4xl mb-4 float-animation" style="animation-delay: 1s;">✨</div>
                     <h3 class="text-xl font-bold text-gray-900 mb-3">Simplicity Built-In</h3>
                     <p class="text-gray-600">Clean, minimal interface that's easy and intuitive to use.</p>
                 </div>
@@ -160,11 +447,11 @@
 
     <!-- Team Section -->
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <h2 class="text-4xl font-bold text-gray-900 mb-4 text-center fade-in-up">Meet the Founder</h2>
+        <h2 class="text-4xl font-bold text-gray-900 mb-4 text-center fade-in-up">Meet Founder</h2>
         <p class="text-center text-gray-600 mb-12 text-lg fade-in-up fade-in-up-delay-1">The visionary behind Himanshu Uploads</p>
         
         <div class="max-w-2xl mx-auto">
-            <div class="card-hover bg-white border border-gray-200 rounded-lg overflow-hidden fade-in-up fade-in-up-delay-2">
+            <div class="card-hover bg-white border border-gray-200 rounded-lg overflow-hidden fade-in-up fade-in-up-delay-2 team-card">
                 <div class="h-40 bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 flex items-center justify-center">
                     <img src="githublogo.jpg" alt="Himanshu Gurjar" class="w-32 h-32 rounded-full object-cover border-4 border-white">
                 </div>
@@ -190,22 +477,151 @@
         </div>
     </section>
 
-    <!-- Skills Section -->
+    <!-- Enhanced Skills Section -->
     <section class="bg-white py-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-4xl font-bold text-gray-900 mb-12 text-center fade-in-up">Skills & Expertise</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="card-hover bg-gray-50 p-8 rounded-lg border border-gray-200 stagger-item">
                     <h3 class="text-lg font-bold text-gray-900 mb-4">💻 Frontend</h3>
-                    <p class="text-gray-600">React, Vue, HTML/CSS, JavaScript, Tailwind CSS</p>
+                    <div class="mb-3">
+                        <div class="flex justify-between mb-1">
+                            <span class="text-gray-600">React</span>
+                            <span class="text-gray-600">90%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-width="90%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="flex justify-between mb-1">
+                            <span class="text-gray-600">Vue</span>
+                            <span class="text-gray-600">85%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-width="85%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="flex justify-between mb-1">
+                            <span class="text-gray-600">HTML/CSS</span>
+                            <span class="text-gray-600">95%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-width="95%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-gray-600">JavaScript</span>
+                            <span class="text-gray-600">90%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-width="90%"></div>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-hover bg-gray-50 p-8 rounded-lg border border-gray-200 stagger-item">
                     <h3 class="text-lg font-bold text-gray-900 mb-4">🔧 Backend</h3>
-                    <p class="text-gray-600">Node.js, Python, Express, MongoDB, SQL</p>
+                    <div class="mb-3">
+                        <div class="flex justify-between mb-1">
+                            <span class="text-gray-600">Node.js</span>
+                            <span class="text-gray-600">85%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-width="85%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="flex justify-between mb-1">
+                            <span class="text-gray-600">Python</span>
+                            <span class="text-gray-600">80%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-width="80%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="flex justify-between mb-1">
+                            <span class="text-gray-600">Express</span>
+                            <span class="text-gray-600">85%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-width="85%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-gray-600">MongoDB/SQL</span>
+                            <span class="text-gray-600">75%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-width="75%"></div>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-hover bg-gray-50 p-8 rounded-lg border border-gray-200 stagger-item">
                     <h3 class="text-lg font-bold text-gray-900 mb-4">☁️ DevOps</h3>
-                    <p class="text-gray-600">Docker, AWS, GitHub Actions, CI/CD</p>
+                    <div class="mb-3">
+                        <div class="flex justify-between mb-1">
+                            <span class="text-gray-600">Docker</span>
+                            <span class="text-gray-600">70%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-width="70%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="flex justify-between mb-1">
+                            <span class="text-gray-600">AWS</span>
+                            <span class="text-gray-600">65%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-width="65%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="flex justify-between mb-1">
+                            <span class="text-gray-600">GitHub Actions</span>
+                            <span class="text-gray-600">80%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-width="80%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-gray-600">CI/CD</span>
+                            <span class="text-gray-600">75%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-width="75%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Timeline -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <h2 class="text-4xl font-bold text-gray-900 mb-12 text-center fade-in-up">Experience Journey</h2>
+        <div class="max-w-3xl mx-auto">
+            <div class="timeline">
+                <div class="timeline-item fade-in-up">
+                    <h3 class="text-xl font-bold text-gray-900">Full Stack Developer</h3>
+                    <p class="text-orange-600 mb-2">FlaxySystems | 2023 - Present</p>
+                    <p class="text-gray-600">Developing and maintaining web applications with modern technologies.</p>
+                </div>
+                <div class="timeline-item fade-in-up fade-in-up-delay-1">
+                    <h3 class="text-xl font-bold text-gray-900">Web Developer</h3>
+                    <p class="text-orange-600 mb-2">Freelance | 2022 - 2023</p>
+                    <p class="text-gray-600">Building custom websites and applications for various clients.</p>
+                </div>
+                <div class="timeline-item fade-in-up fade-in-up-delay-2">
+                    <h3 class="text-xl font-bold text-gray-900">Junior Developer</h3>
+                    <p class="text-orange-600 mb-2">Tech Startup | 2021 - 2022</p>
+                    <p class="text-gray-600">Started the journey in web development and learned the fundamentals.</p>
                 </div>
             </div>
         </div>
@@ -214,8 +630,11 @@
     <!-- Contact Section -->
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center fade-in-up">
         <h2 class="text-4xl font-bold text-gray-900 mb-4">Get in Touch</h2>
-        <p class="text-lg text-gray-600 mb-8">Have questions?  We'd love to hear from you. </p>
-        <a href="mailto:himanshugurjar@zohomail.in" class="btn-primary">Send us an Email</a>
+        <p class="text-lg text-gray-600 mb-8">Have questions? We'd love to hear from you.</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="mailto:himanshugurjar@zohomail.in" class="btn-primary">Send us an Email</a>
+            <a href="https://flaxynodes.fun/himanshu" target="_blank" class="btn-primary">Visit Portfolio</a>
+        </div>
     </section>
 
     <!-- Footer -->
@@ -241,11 +660,166 @@
             </div>
             <div class="border-t border-gray-800 pt-8 text-center text-gray-400">
                 <p>Powered by <a href="https://flaxynodes.fun" class="text-white hover:underline">FlaxySystems</a> & <a href="https://flaxynodes.fun/himanshu" class="text-white hover:underline">Himanshu Gurjar</a></p>
-                <p class="mt-2">&copy; 2025 Himanshu Uploads.  All rights reserved.</p>
+                <p class="mt-2">&copy; 2025 Himanshu Uploads. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
+    <!-- Back to Top Button -->
+    <div id="back-to-top" class="back-to-top">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="18 15 12 9 6 15"></polyline>
+        </svg>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <span id="toast-message">Notification message</span>
+    </div>
+
     <script src="script.js"></script>
+    <script>
+        // FIXED MOBILE MENU FUNCTIONALITY
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded');
+            
+            // Mobile menu toggle - SIMPLIFIED
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            console.log('Mobile menu btn:', mobileMenuBtn);
+            console.log('Mobile menu:', mobileMenu);
+            
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('Mobile menu button clicked');
+                    mobileMenu.classList.toggle('active');
+                    this.classList.toggle('active');
+                    console.log('Menu classes:', mobileMenu.className);
+                });
+            }
+
+            // Close mobile menu when clicking on a link
+            const mobileLinks = mobileMenu.querySelectorAll('a');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    mobileMenu.classList.remove('active');
+                    mobileMenuBtn.classList.remove('active');
+                });
+            });
+
+            // Other initializations
+            setupBackToTopButton();
+            setupScrollAnimations();
+            animateSkillBars();
+            setupSmoothScroll();
+        });
+
+        function setupBackToTopButton() {
+            const backToTopBtn = document.getElementById('back-to-top');
+            
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTopBtn.classList.add('show');
+                } else {
+                    backToTopBtn.classList.remove('show');
+                }
+            });
+
+            backToTopBtn.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+
+        function setupScrollAnimations() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -100px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in-up');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all sections
+            document.querySelectorAll('section').forEach(section => {
+                observer.observe(section);
+            });
+        }
+
+        function animateSkillBars() {
+            const skillBars = document.querySelectorAll('.skill-progress');
+            
+            const animateBar = (bar) => {
+                const width = bar.getAttribute('data-width');
+                bar.style.width = width;
+            };
+            
+            // Start animation when skills section is visible
+            const skillsSection = document.querySelector('.skill-bar').closest('section');
+            const skillsObserver = new IntersectionObserver(function(entries) {
+                if (entries[0].isIntersecting) {
+                    skillBars.forEach(bar => {
+                        animateBar(bar);
+                    });
+                    skillsObserver.unobserve(skillsSection);
+                }
+            }, { threshold: 0.5 });
+            
+            skillsObserver.observe(skillsSection);
+        }
+
+        function setupSmoothScroll() {
+            // Add smooth scroll behavior to all anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId !== '#') {
+                        const targetElement = document.querySelector(targetId);
+                        if (targetElement) {
+                            window.scrollTo({
+                                top: targetElement.offsetTop - 80,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                });
+            });
+
+            // Show toast notification for contact buttons
+            const contactButtons = document.querySelectorAll('.btn-primary');
+            contactButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    if (this.getAttribute('href') && this.getAttribute('href').startsWith('mailto:')) {
+                        showToast('Opening your email client...');
+                    } else if (this.getAttribute('target') === '_blank') {
+                        showToast('Opening portfolio in a new tab...');
+                    }
+                });
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
 </body>
 </html>
