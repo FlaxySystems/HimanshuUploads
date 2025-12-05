@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Downloads - Himanshu Uploads</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="icon.webp">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        a, button {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b35 0%, #ff5722 100%);
+            color: white;
+            font-weight: 600;
+            padding: 12px 32px;
+            border-radius: 8px;
+            display: inline-block;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 8px 24px rgba(255, 107, 53, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #ff6b35 0%, #ff5722 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stagger-item {
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .stagger-item:nth-child(1) { animation-delay: 0.05s; }
+        .stagger-item:nth-child(2) { animation-delay: 0.1s; }
+        .stagger-item:nth-child(3) { animation-delay: 0.15s; }
+        .stagger-item:nth-child(4) { animation-delay: 0.2s; }
+        .stagger-item:nth-child(5) { animation-delay: 0.25s; }
+        .stagger-item:nth-child(6) { animation-delay: 0.3s; }
+
+        .badge-new {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff6b35;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            animation: pulse 2s infinite;
+        }
+
+        .star-rating {
+            color: #fbbf24;
+            font-size: 0.875rem;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid #e5e7eb;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            color: #4b5563;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .filter-btn::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #ff6b35 0%, #ff5722 100%);
+            transition: width 0.3s ease;
+        }
+
+        .filter-btn:hover::after {
+            width: 100%;
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, #ff6b35 0%, #ff5722 100%);
+            color: white;
+            border-color: #ff6b35;
+        }
+
+        .filter-btn:hover {
+            border-color: #ff6b35;
+            transform: translateY(-2px);
+        }
+
+        /* FIXED Mobile Menu - Simple and Reliable */
+        .mobile-menu {
+            display: none;
+        }
+
+        .mobile-menu.active {
+            display: block;
+        }
+
+        /* Hamburger menu animation */
+        .hamburger-line {
+            transition: all 0.3s ease;
+            transform-origin: center;
+        }
+
+        .hamburger.active .hamburger-line:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger.active .hamburger-line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active .hamburger-line:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            color: #333;
+            padding: 16px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #ff6b35 0%, #ff5722 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .search-input:focus {
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.2);
+        }
+
+        .file-icon-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .file-icon-container::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(255, 87, 34, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card-hover:hover .file-icon-container::after {
+            opacity: 1;
+        }
+
+        .page-transition {
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .loading-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 107, 53, 0.2);
+            border-top-color: #ff6b35;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Navigation Bar - FIXED STRUCTURE -->
+    <nav class="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3">
+                    <img src="icon.webp" alt="Himanshu Uploads" class="w-8 h-8">
+                    <span class="text-xl font-bold text-gray-900">Himanshu Uploads</span>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex gap-8 items-center">
+                    <a href="index.html" class="text-gray-600 hover:text-gray-900 font-medium relative group">
+                        Home
+                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-500 to-red-500 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="downloads.html" class="text-gray-600 hover:text-gray-900 font-medium relative group">
+                        Downloads
+                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-500 to-red-500 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="about.html" class="text-gray-600 hover:text-gray-900 font-medium relative group">
+                        About
+                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-500 to-red-500 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <button id="sort-btn" class="text-gray-600 hover:text-gray-900 font-medium transition" title="Sort files">
+                        ⬇️ Sort
+                    </button>
+                </div>
+                
+                <!-- Mobile Menu Button - SIMPLIFIED -->
+                <button id="mobile-menu-btn" class="md:hidden text-gray-700 p-2 focus:outline-none">
+                    <div class="hamburger w-6 h-6 flex flex-col justify-center">
+                        <span class="hamburger-line block h-0.5 w-6 bg-gray-700 mb-1"></span>
+                        <span class="hamburger-line block h-0.5 w-6 bg-gray-700 mb-1"></span>
+                        <span class="hamburger-line block h-0.5 w-6 bg-gray-700"></span>
+                    </div>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu - SIMPLIFIED -->
+        <div id="mobile-menu" class="mobile-menu md:hidden border-t border-gray-100 bg-white">
+            <a href="index.html" class="block px-4 py-3 text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition">Home</a>
+            <a href="downloads.html" class="block px-4 py-3 text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition">Downloads</a>
+            <a href="about.html" class="block px-4 py-3 text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition">About</a>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="bg-white py-12 border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 fade-in-up">
+            <h1 class="text-4xl font-bold text-gray-900 mb-2">📥 Downloads</h1>
+            <p class="text-gray-600 text-lg">Browse and download amazing files instantly</p>
+        </div>
+    </section>
+
+    <!-- Stats Bar -->
+    <section class="bg-white border-b border-gray-100 py-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-3 gap-4 text-center">
+                <div>
+                    <p class="text-2xl font-bold gradient-text" id="total-files">15</p>
+                    <p class="text-gray-600 text-sm">Total Files</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-bold gradient-text" id="total-downloads">50</p>
+                    <p class="text-gray-600 text-sm">Total Downloads</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-bold gradient-text" id="newest-file">Today</p>
+                    <p class="text-gray-600 text-sm">Latest Upload</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search & Filter Section -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="mb-8 fade-in-up">
+            <input type="text" id="search-input" placeholder="🔍 Search files..." 
+                   class="search-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white placeholder-gray-500 text-gray-900">
+        </div>
+
+        <!-- Category Filter -->
+        <div class="mb-8 flex flex-wrap gap-3 fade-in-up">
+            <button class="filter-btn active category-filter" data-category="all">All Files</button>
+            <button class="filter-btn category-filter" data-category="documents">📄 Documents</button>
+            <button class="filter-btn category-filter" data-category="videos">🎥 Videos</button>
+            <button class="filter-btn category-filter" data-category="code">💻 Code</button>
+            <button class="filter-btn category-filter" data-category="design">🎨 Design</button>
+        </div>
+
+        <!-- Files Grid -->
+        <div id="files-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Files will be loaded here by JavaScript -->
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex justify-center items-center gap-4 mt-12 fade-in-up flex-wrap">
+            <button id="prev-btn" class="px-6 py-2 bg-white border border-gray-300 text-gray-900 font-medium rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition">
+                ← Previous
+            </button>
+            <div id="page-info" class="text-gray-700 font-medium px-6 py-2 bg-white border border-gray-300 rounded-lg">Page 1</div>
+            <button id="next-btn" class="px-6 py-2 bg-white border border-gray-300 text-gray-900 font-medium rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition">
+                Next →
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <div>
+                    <h4 class="font-bold mb-3">About</h4>
+                    <p class="text-gray-400">Himanshu Uploads - Fast and secure file sharing platform for everyone.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-3">Links</h4>
+                    <ul class="text-gray-400 space-y-2">
+                        <li><a href="index.html" class="hover:text-white transition">Home</a></li>
+                        <li><a href="downloads.html" class="hover:text-white transition">Downloads</a></li>
+                        <li><a href="about.html" class="hover:text-white transition">About</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-3">Contact</h4>
+                    <p class="text-gray-400">📧 himanshugurjar@zohomail.in</p>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 text-center text-gray-400">
+                <p>Powered by <a href="https://flaxynodes.fun" class="text-white hover:underline">FlaxySystems</a> & <a href="https://flaxynodes.fun/himanshu" class="text-white hover:underline">Himanshu Gurjar</a></p>
+                <p class="mt-2">&copy; 2025 Himanshu Uploads. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <div id="back-to-top" class="back-to-top">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="18 15 12 9 6 15"></polyline>
+        </svg>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <span id="toast-message">Notification message</span>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Files data with categories
+        const filesData = [
+            { 
+                id: 1, 
+                name: 'The Colonial Era in India Notes CBSE 8 ', 
+                size: '661 KB', 
+                downloads: 12, 
+                icon: '📚', 
+                category: 'documents',
+                rating: 4.8,
+                reviews: 24,
+                isNew: true,
+                url: 'https://raw.githubusercontent.com/HimanshuGurjarIN/sst/main/THE_COLONIAL_ERA_IN_INDIA_(_Notes)%5B1%5D.pdf' 
+            },
+                        { 
+                id: 2, 
+                name: 'Universal Franchise And India Electoral System Notes CBSE 8', 
+                size: '444 KB', 
+                downloads: 32, 
+                icon: '📚', 
+                category: 'documents',
+                rating: 4.4,
+                reviews: 4,
+                isNew: true,
+                url: 'https://raw.githubusercontent.com/FlaxySystems/sst/main/UNIVERSAL%20ADULT%20FRANCHISE%20AND%20INDIA%E2%80%99S%20ELECTORAL%20SYSTEM%20(NOTES).pdf' 
+            },
+        ];
+
+        // Pagination settings
+        const itemsPerPage = 6;
+        let currentPage = 1;
+        let currentSearchTerm = '';
+        let currentCategory = 'all';
+        let sortBy = 'downloads'; // 'downloads', 'name', 'rating'
+        let isLoading = false;
+
+        // Initialize downloads page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded');
+            
+            // FIXED MOBILE MENU FUNCTIONALITY
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            console.log('Mobile menu btn:', mobileMenuBtn);
+            console.log('Mobile menu:', mobileMenu);
+            
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('Mobile menu button clicked');
+                    mobileMenu.classList.toggle('active');
+                    this.classList.toggle('active');
+                    console.log('Menu classes:', mobileMenu.className);
+                });
+            }
+
+            // Close mobile menu when clicking on a link
+            const mobileLinks = mobileMenu.querySelectorAll('a');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    mobileMenu.classList.remove('active');
+                    mobileMenuBtn.classList.remove('active');
+                });
+            });
+
+            // Other initializations
+            renderFiles();
+            setupEventListeners();
+            updateStats();
+            setupBackToTopButton();
+        });
+
+        function setupEventListeners() {
+            // Search functionality
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) {
+                searchInput.addEventListener('input', debounce(function() {
+                    currentSearchTerm = this.value.toLowerCase();
+                    currentPage = 1;
+                    showLoading();
+                    setTimeout(() => {
+                        renderFiles();
+                        hideLoading();
+                    }, 300);
+                }, 300));
+            }
+
+            // Category filter
+            const categoryBtns = document.querySelectorAll('.category-filter');
+            categoryBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    categoryBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentCategory = this.dataset.category;
+                    currentPage = 1;
+                    showLoading();
+                    setTimeout(() => {
+                        renderFiles();
+                        hideLoading();
+                    }, 300);
+                });
+            });
+
+            // Sort button
+            const sortBtn = document.getElementById('sort-btn');
+            if (sortBtn) {
+                sortBtn.addEventListener('click', function() {
+                    const options = ['downloads', 'name', 'rating'];
+                    const currentIndex = options.indexOf(sortBy);
+                    sortBy = options[(currentIndex + 1) % options.length];
+                    sortBtn.textContent = sortBy === 'downloads' ? '⬇️ Sort' : sortBy === 'name' ? '📝 Sort' : '⭐ Sort';
+                    showLoading();
+                    setTimeout(() => {
+                        renderFiles();
+                        hideLoading();
+                    }, 300);
+                });
+            }
+
+            // Pagination buttons
+            const nextBtn = document.getElementById('next-btn');
+            const prevBtn = document.getElementById('prev-btn');
+
+            if (nextBtn) {
+                nextBtn.addEventListener('click', function() {
+                    const totalPages = getTotalPages();
+                    if (currentPage < totalPages) {
+                        currentPage++;
+                        showLoading();
+                        setTimeout(() => {
+                            renderFiles();
+                            hideLoading();
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }, 300);
+                    }
+                });
+            }
+
+            if (prevBtn) {
+                prevBtn.addEventListener('click', function() {
+                    if (currentPage > 1) {
+                        currentPage--;
+                        showLoading();
+                        setTimeout(() => {
+                            renderFiles();
+                            hideLoading();
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }, 300);
+                    }
+                });
+            }
+        }
+
+        function setupBackToTopButton() {
+            const backToTopBtn = document.getElementById('back-to-top');
+            
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTopBtn.classList.add('show');
+                } else {
+                    backToTopBtn.classList.remove('show');
+                }
+            });
+
+            backToTopBtn.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+
+        function showLoading() {
+            isLoading = true;
+            document.getElementById('loading-overlay').classList.add('show');
+        }
+
+        function hideLoading() {
+            isLoading = false;
+            document.getElementById('loading-overlay').classList.remove('show');
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function() {
+                const context = this;
+                const args = arguments;
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    func.apply(context, args);
+                }, wait);
+            };
+        }
+
+        function getFilteredFiles() {
+            return filesData.filter(file => {
+                const matchesSearch = file.name.toLowerCase().includes(currentSearchTerm);
+                const matchesCategory = currentCategory === 'all' || file.category === currentCategory;
+                return matchesSearch && matchesCategory;
+            }).sort((a, b) => {
+                if (sortBy === 'downloads') return b.downloads - a.downloads;
+                if (sortBy === 'name') return a.name.localeCompare(b.name);
+                if (sortBy === 'rating') return b.rating - a.rating;
+            });
+        }
+
+        function getTotalPages() {
+            const filteredFiles = getFilteredFiles();
+            return Math.ceil(filteredFiles.length / itemsPerPage);
+        }
+
+        function renderFiles() {
+            const filteredFiles = getFilteredFiles();
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedFiles = filteredFiles.slice(startIndex, endIndex);
+
+            const filesContainer = document.getElementById('files-container');
+            filesContainer.innerHTML = '';
+            filesContainer.classList.add('page-transition');
+
+            if (paginatedFiles.length === 0) {
+                filesContainer.innerHTML = '<div class="col-span-full text-center py-12"><p class="text-gray-600 text-lg">No files found. Try a different search or category.</p></div>';
+            } else {
+                paginatedFiles.forEach((file, index) => {
+                    const fileCard = createFileCard(file, index);
+                    filesContainer.appendChild(fileCard);
+                });
+            }
+
+            updatePaginationInfo();
+        }
+
+        function createFileCard(file, index) {
+            const card = document.createElement('div');
+            card.className = 'card-hover bg-white border border-gray-200 rounded-lg overflow-hidden stagger-item relative';
+            card.style.animationDelay = `${index * 0.05}s`;
+            
+            card.innerHTML = `
+                ${file.isNew ? '<div class="badge-new">✨ NEW</div>' : ''}
+                <div class="file-icon-container bg-gradient-to-br from-orange-50 to-red-50 p-6 flex items-center justify-center h-28">
+                    <span class="text-5xl">${file.icon}</span>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-2 line-clamp-2" title="${file.name}">${file.name}</h3>
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="star-rating">⭐ ${file.rating} <span class="text-gray-600 text-xs">(${file.reviews})</span></div>
+                    </div>
+                    <div class="flex justify-between text-sm text-gray-600 mb-4">
+                        <span>📦 ${file.size}</span>
+                        <span>📥 ${file.downloads}</span>
+                    </div>
+                    <div class="flex gap-2">
+                        <a href="${file.url}" target="_blank" rel="noopener noreferrer" class="flex-1 btn-primary text-white font-semibold py-2 px-4 rounded-lg hover:shadow-lg text-center transition">
+                            Download
+                        </a>
+                        <button class="share-btn px-3 py-2 bg-gray-100 text-gray-900 rounded-lg hover:bg-gray-200 transition" title="Share file" data-file-name="${file.name}">
+                            📤
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            // Add event listener to share button
+            const shareBtn = card.querySelector('.share-btn');
+            if (shareBtn) {
+                shareBtn.addEventListener('click', function() {
+                    const fileName = this.getAttribute('data-file-name');
+                    if (navigator.share) {
+                        navigator.share({
+                            title: fileName,
+                            text: `Check out this file: ${fileName}`,
+                            url: window.location.href
+                        }).catch(err => console.log('Error sharing:', err));
+                    } else {
+                        // Fallback for browsers that don't support Web Share API
+                        const dummy = document.createElement('input');
+                        document.body.appendChild(dummy);
+                        dummy.value = window.location.href;
+                        dummy.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(dummy);
+                        showToast('Link copied to clipboard!');
+                    }
+                });
+            }
+
+            // Add event listener to download button
+            const downloadBtn = card.querySelector('.btn-primary');
+            if (downloadBtn) {
+                downloadBtn.addEventListener('click', function(e) {
+                    if (file.url === '#') {
+                        e.preventDefault();
+                        showToast('Download link is not available for this file.');
+                    } else {
+                        showToast(`Starting download of ${file.name}...`);
+                    }
+                });
+            }
+
+            return card;
+        }
+
+        function updatePaginationInfo() {
+            const pageInfo = document.getElementById('page-info');
+            const totalPages = getTotalPages();
+            
+            if (pageInfo) {
+                pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+            }
+
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+
+            if (prevBtn) prevBtn.disabled = currentPage === 1;
+            if (nextBtn) nextBtn.disabled = currentPage === totalPages || totalPages === 0;
+        }
+
+        function updateStats() {
+            document.getElementById('total-files').textContent = filesData.length;
+            const totalDownloads = filesData.reduce((sum, file) => sum + file.downloads, 0);
+            document.getElementById('total-downloads').textContent = totalDownloads;
+            
+            // Find the newest file date
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            const hasNewFiles = filesData.some(file => file.isNew);
+            document.getElementById('newest-file').textContent = hasNewFiles ? 'Today' : 'Yesterday';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Himanshu Uploads - Share & Download Files</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="icon.webp">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Smooth transitions */
+        a, button {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Hover effect for cards */
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Smooth fade in animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .fade-in-up {
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .fade-in-up-delay-1 { animation-delay: 0.1s; }
+        .fade-in-up-delay-2 { animation-delay: 0.2s; }
+        .fade-in-up-delay-3 { animation-delay: 0.3s; }
+
+        /* Button hover glow */
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b35 0%, #ff5722 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 8px 24px rgba(255, 107, 53, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Gradient text */
+        .gradient-text {
+            background: linear-gradient(135deg, #ff6b35 0%, #ff5722 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* FIXED Mobile Menu - Simple and Reliable */
+        .mobile-menu {
+            display: none;
+        }
+
+        .mobile-menu.active {
+            display: block;
+        }
+
+        /* Hamburger menu animation */
+        .hamburger-line {
+            transition: all 0.3s ease;
+            transform-origin: center;
+        }
+
+        .hamburger.active .hamburger-line:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger.active .hamburger-line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active .hamburger-line:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+
+        /* Floating animation for hero section elements */
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: pulse 2s infinite;
+        }
+
+        /* Feature card hover effect */
+        .feature-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.05) 0%, rgba(255, 87, 34, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature-card:hover::after {
+            opacity: 1;
+        }
+
+        /* Stats counter animation */
+        .counter {
+            transition: all 0.5s ease;
+        }
+
+        /* Back to top button */
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #ff6b35 0%, #ff5722 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            color: #333;
+            padding: 16px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        /* Responsive adjustments for all zoom levels */
+        @media (max-width: 640px) {
+            .hero-title {
+                font-size: 2.5rem;
+                line-height: 1.2;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.125rem;
+            }
+        }
+
+        /* Ensure content doesn't break at any zoom level */
+        .responsive-container {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+            box-sizing: border-box;
+        }
+
+        .responsive-text {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+        }
+
+        /* Hero section background pattern */
+        .hero-pattern {
+            background-image: radial-gradient(circle at 1px 1px, rgba(255, 107, 53, 0.05) 1px, transparent 0);
+            background-size: 40px 40px;
+        }
+
+        /* Stats number animation */
+        @keyframes countUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .count-animation {
+            animation: countUp 1s ease-out forwards;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar - FIXED STRUCTURE -->
+    <nav class="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center gap-3">
+                    <img src="icon.webp" alt="Himanshu Uploads" class="w-8 h-8">
+                    <span class="text-xl font-bold text-gray-900">Himanshu Uploads</span>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex gap-8 items-center">
+                    <a href="index.html" class="text-gray-600 hover:text-gray-900 font-medium relative group">
+                        Home
+                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-500 to-red-500 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="downloads.html" class="text-gray-600 hover:text-gray-900 font-medium relative group">
+                        Downloads
+                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-500 to-red-500 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="about.html" class="text-gray-600 hover:text-gray-900 font-medium relative group">
+                        About
+                        <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-500 to-red-500 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                </div>
+                
+                <!-- Mobile Menu Button - SIMPLIFIED -->
+                <button id="mobile-menu-btn" class="md:hidden text-gray-700 p-2 focus:outline-none">
+                    <div class="hamburger w-6 h-6 flex flex-col justify-center">
+                        <span class="hamburger-line block h-0.5 w-6 bg-gray-700 mb-1"></span>
+                        <span class="hamburger-line block h-0.5 w-6 bg-gray-700 mb-1"></span>
+                        <span class="hamburger-line block h-0.5 w-6 bg-gray-700"></span>
+                    </div>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu - SIMPLIFIED -->
+        <div id="mobile-menu" class="mobile-menu md:hidden border-t border-gray-100 bg-white">
+            <a href="index.html" class="block px-4 py-3 text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition">Home</a>
+            <a href="downloads.html" class="block px-4 py-3 text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition">Downloads</a>
+            <a href="about.html" class="block px-4 py-3 text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition">About</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="bg-white py-20 md:py-32 hero-pattern relative responsive-container">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-3xl fade-in-up">
+                <h1 class="hero-title text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight responsive-text">
+                    Share and Download Files with <span class="gradient-text">Ease</span>
+                </h1>
+                <p class="hero-subtitle text-xl text-gray-600 mb-8 leading-relaxed responsive-text">
+                    Fast, secure, and simple file sharing platform. Get your files instantly without any complications or hassle.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="downloads.html" class="inline-block btn-primary text-white font-semibold py-3 px-8 rounded-lg hover:shadow-lg">
+                        Browse Files
+                    </a>
+                    <a href="about.html" class="inline-block bg-gray-100 text-gray-900 font-semibold py-3 px-8 rounded-lg hover:bg-gray-200 hover:shadow-md transition-all">
+                        Learn More
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="bg-gray-50 py-20 responsive-container">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4 responsive-text">Why Choose Himanshu Uploads?</h2>
+                <p class="text-gray-600 text-lg responsive-text">Everything you need for fast and secure file sharing</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="card-hover bg-white p-8 rounded-xl border border-gray-200 fade-in-up fade-in-up-delay-1 feature-card">
+                    <div class="text-4xl mb-4 float-animation">⚡</div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Lightning Fast</h3>
+                    <p class="text-gray-600 responsive-text">Download files at incredible speeds with our optimized servers and CDN.</p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="card-hover bg-white p-8 rounded-xl border border-gray-200 fade-in-up fade-in-up-delay-2 feature-card">
+                    <div class="text-4xl mb-4 float-animation" style="animation-delay: 0.5s;">🔒</div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Secure & Safe</h3>
+                    <p class="text-gray-600 responsive-text">Your files are protected with encryption and secure storage protocols.</p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="card-hover bg-white p-8 rounded-xl border border-gray-200 fade-in-up fade-in-up-delay-3 feature-card">
+                    <div class="text-4xl mb-4 float-animation" style="animation-delay: 1s;">✨</div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Easy to Use</h3>
+                    <p class="text-gray-600 responsive-text">Clean interface designed for everyone. Download in one click.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="bg-white py-20 responsive-container">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <div class="text-center fade-in-up fade-in-up-delay-1">
+                    <h3 class="text-4xl font-bold gradient-text mb-2 counter" data-target="1000">0</h3>
+                    <p class="text-gray-600 text-lg responsive-text">Files Available</p>
+                </div>
+                <div class="text-center fade-in-up fade-in-up-delay-2">
+                    <h3 class="text-4xl font-bold gradient-text mb-2 counter" data-target="50000">0</h3>
+                    <p class="text-gray-600 text-lg responsive-text">Downloads</p>
+                </div>
+                <div class="text-center fade-in-up fade-in-up-delay-3">
+                    <h3 class="text-4xl font-bold gradient-text mb-2 counter" data-target="100">0</h3>
+                    <p class="text-gray-600 text-lg responsive-text">User Satisfaction</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="bg-gray-50 py-20 responsive-container">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center fade-in-up">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4 responsive-text">Ready to Get Started?</h2>
+            <p class="text-lg text-gray-600 mb-8 responsive-text">Browse our collection of files and download what you need instantly.</p>
+            <a href="downloads.html" class="inline-block btn-primary text-white font-semibold py-3 px-8 rounded-lg">
+                Start Downloading Now
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 responsive-container">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <div>
+                    <h4 class="font-bold mb-3">About</h4>
+                    <p class="text-gray-400 responsive-text">Himanshu Uploads - Fast and secure file sharing platform for everyone.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-3">Links</h4>
+                    <ul class="text-gray-400 space-y-2">
+                        <li><a href="index.html" class="hover:text-white transition">Home</a></li>
+                        <li><a href="downloads.html" class="hover:text-white transition">Downloads</a></li>
+                        <li><a href="about.html" class="hover:text-white transition">About</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-3">Contact</h4>
+                    <p class="text-gray-400 responsive-text">📧 himanshugurjar@zohomail.in</p>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 text-center text-gray-400">
+                <p>Powered by <a href="https://flaxynodes.fun" class="text-white hover:underline">FlaxySystems</a> & <a href="https://flaxynodes.fun/himanshu" class="text-white hover:underline">Himanshu Gurjar</a></p>
+                <p class="mt-2">&copy; 2025 Himanshu Uploads. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <div id="back-to-top" class="back-to-top">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="18 15 12 9 6 15"></polyline>
+        </svg>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <span id="toast-message">Notification message</span>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // FIXED MOBILE MENU FUNCTIONALITY
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded');
+            
+            // Mobile menu toggle - SIMPLIFIED
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            console.log('Mobile menu btn:', mobileMenuBtn);
+            console.log('Mobile menu:', mobileMenu);
+            
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('Mobile menu button clicked');
+                    mobileMenu.classList.toggle('active');
+                    this.classList.toggle('active');
+                    console.log('Menu classes:', mobileMenu.className);
+                });
+            }
+
+            // Close mobile menu when clicking on a link
+            const mobileLinks = mobileMenu.querySelectorAll('a');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    mobileMenu.classList.remove('active');
+                    mobileMenuBtn.classList.remove('active');
+                });
+            });
+
+            // Other initializations
+            setupBackToTopButton();
+            setupScrollAnimations();
+            animateCounters();
+            setupSmoothScroll();
+        });
+
+        function setupBackToTopButton() {
+            const backToTopBtn = document.getElementById('back-to-top');
+            
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTopBtn.classList.add('show');
+                } else {
+                    backToTopBtn.classList.remove('show');
+                }
+            });
+
+            backToTopBtn.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+
+        function setupScrollAnimations() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -100px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in-up');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all sections
+            document.querySelectorAll('section').forEach(section => {
+                observer.observe(section);
+            });
+        }
+
+        function animateCounters() {
+            const counters = document.querySelectorAll('.counter');
+            const speed = 200;
+            
+            const countUp = (counter) => {
+                const target = +counter.getAttribute('data-target');
+                const count = +counter.innerText;
+                const increment = target / speed;
+                
+                if (count < target) {
+                    counter.innerText = Math.ceil(count + increment);
+                    setTimeout(() => countUp(counter), 10);
+                } else {
+                    // Format the final number
+                    if (target >= 1000) {
+                        counter.innerText = (target / 1000).toFixed(0) + 'K+';
+                    } else if (target === 100) {
+                        counter.innerText = target + '%';
+                    } else {
+                        counter.innerText = target + '+';
+                    }
+                }
+            };
+            
+            // Start counter animation when stats section is visible
+            const statsSection = document.querySelector('.counter').closest('section');
+            const statsObserver = new IntersectionObserver(function(entries) {
+                if (entries[0].isIntersecting) {
+                    counters.forEach(counter => {
+                        countUp(counter);
+                    });
+                    statsObserver.unobserve(statsSection);
+                }
+            }, { threshold: 0.5 });
+            
+            statsObserver.observe(statsSection);
+        }
+
+        function setupSmoothScroll() {
+            // Add smooth scroll behavior to all anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId !== '#') {
+                        const targetElement = document.querySelector(targetId);
+                        if (targetElement) {
+                            window.scrollTo({
+                                top: targetElement.offsetTop - 80,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                });
+            });
+
+            // Show toast notification for CTA button
+            const ctaButton = document.querySelector('.btn-primary');
+            if (ctaButton) {
+                ctaButton.addEventListener('click', function(e) {
+                    showToast('Welcome to our downloads page!');
+                });
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
