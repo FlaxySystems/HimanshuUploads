@@ -6,6 +6,15 @@
     <title>Downloads - Himanshu Uploads</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" href="icon.webp">
+    
+    <!-- Code Highlighting Library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-html.min.js"></script>
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         
@@ -165,7 +174,7 @@
             transform: translateY(-2px);
         }
 
-        /* FIXED Mobile Menu - Simple and Reliable */
+        /* Mobile Menu - Simple and Reliable */
         .mobile-menu {
             display: none;
         }
@@ -321,6 +330,205 @@
                 transform: rotate(360deg);
             }
         }
+
+        /* File Preview Modal Styles */
+        .preview-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .preview-modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .preview-container {
+            background: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 900px;
+            max-height: 80vh;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .preview-modal.show .preview-container {
+            transform: scale(1);
+        }
+
+        .preview-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .preview-content {
+            padding: 24px;
+            overflow-y: auto;
+            max-height: calc(80vh - 65px);
+        }
+
+        .close-preview {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #6b7280;
+            transition: color 0.2s;
+        }
+
+        .close-preview:hover {
+            color: #374151;
+        }
+
+        /* Code Preview Styles */
+        .code-preview {
+            background: #2d2d2d;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .code-header {
+            background: #1e1e1e;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .code-language {
+            color: #9ca3af;
+            font-size: 14px;
+        }
+
+        .code-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .code-action-btn {
+            background: none;
+            border: none;
+            color: #9ca3af;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .code-action-btn:hover {
+            background: #374151;
+            color: white;
+        }
+
+        pre[class*="language-"] {
+            margin: 0;
+            padding: 16px;
+            font-size: 14px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        /* Image Preview Styles */
+        .image-preview {
+            text-align: center;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 500px;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* PDF Preview Styles */
+        .pdf-preview {
+            width: 100%;
+            height: 500px;
+            border: none;
+        }
+
+        /* Video Preview Styles */
+        .video-preview {
+            width: 100%;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Audio Preview Styles */
+        .audio-preview {
+            width: 100%;
+            margin-top: 16px;
+        }
+
+        /* Text Preview Styles */
+        .text-preview {
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            background: #f8f9fa;
+            padding: 16px;
+            border-radius: 4px;
+            border: 1px solid #e5e7eb;
+            max-height: 400px;
+            overflow-y: auto;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* Preview Button Styles */
+        .preview-btn {
+            background: #f3f4f6;
+            color: #374151;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .preview-btn:hover {
+            background: #e5e7eb;
+            color: #111827;
+        }
+
+        /* Copy Button Styles */
+        .copy-btn {
+            background: #f3f4f6;
+            color: #374151;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .copy-btn:hover {
+            background: #e5e7eb;
+            color: #111827;
+        }
+
+        .copy-btn.copied {
+            background: #10b981;
+            color: white;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -329,7 +537,7 @@
         <div class="spinner"></div>
     </div>
 
-    <!-- Navigation Bar - FIXED STRUCTURE -->
+    <!-- Navigation Bar -->
     <nav class="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
@@ -357,7 +565,7 @@
                     </button>
                 </div>
                 
-                <!-- Mobile Menu Button - SIMPLIFIED -->
+                <!-- Mobile Menu Button -->
                 <button id="mobile-menu-btn" class="md:hidden text-gray-700 p-2 focus:outline-none">
                     <div class="hamburger w-6 h-6 flex flex-col justify-center">
                         <span class="hamburger-line block h-0.5 w-6 bg-gray-700 mb-1"></span>
@@ -368,7 +576,7 @@
             </div>
         </div>
         
-        <!-- Mobile Menu - SIMPLIFIED -->
+        <!-- Mobile Menu -->
         <div id="mobile-menu" class="mobile-menu md:hidden border-t border-gray-100 bg-white">
             <a href="index.html" class="block px-4 py-3 text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition">Home</a>
             <a href="downloads.html" class="block px-4 py-3 text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition">Downloads</a>
@@ -477,11 +685,24 @@
         <span id="toast-message">Notification message</span>
     </div>
 
+    <!-- File Preview Modal -->
+    <div id="preview-modal" class="preview-modal">
+        <div class="preview-container">
+            <div class="preview-header">
+                <h3 id="preview-title" class="text-lg font-semibold text-gray-900">File Preview</h3>
+                <button id="close-preview" class="close-preview">&times;</button>
+            </div>
+            <div id="preview-content" class="preview-content">
+                <!-- Preview content will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
     <script>
-        // Files data with categories
+        // Files data with categories and file types
         const filesData = [
-            { 
+                        { 
                 id: 1, 
                 name: 'The Colonial Era in India Notes CBSE 8 ', 
                 size: '661 KB', 
@@ -519,7 +740,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM loaded');
             
-            // FIXED MOBILE MENU FUNCTIONALITY
+            // Mobile menu toggle
             const mobileMenuBtn = document.getElementById('mobile-menu-btn');
             const mobileMenu = document.getElementById('mobile-menu');
             
@@ -550,6 +771,7 @@
             setupEventListeners();
             updateStats();
             setupBackToTopButton();
+            setupPreviewModal();
         });
 
         function setupEventListeners() {
@@ -652,6 +874,24 @@
             });
         }
 
+        function setupPreviewModal() {
+            const previewModal = document.getElementById('preview-modal');
+            const closePreviewBtn = document.getElementById('close-preview');
+            
+            closePreviewBtn.addEventListener('click', function() {
+                previewModal.classList.remove('show');
+                document.body.style.overflow = 'auto';
+            });
+            
+            // Close modal when clicking outside
+            previewModal.addEventListener('click', function(e) {
+                if (e.target === previewModal) {
+                    previewModal.classList.remove('show');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        }
+
         function showLoading() {
             isLoading = true;
             document.getElementById('loading-overlay').classList.add('show');
@@ -748,12 +988,27 @@
                         <a href="${file.url}" target="_blank" rel="noopener noreferrer" class="flex-1 btn-primary text-white font-semibold py-2 px-4 rounded-lg hover:shadow-lg text-center transition">
                             Download
                         </a>
+                        <button class="preview-btn px-3 py-2 bg-gray-100 text-gray-900 rounded-lg hover:bg-gray-200 transition" title="Preview file" data-file-id="${file.id}">
+                            👁️
+                        </button>
                         <button class="share-btn px-3 py-2 bg-gray-100 text-gray-900 rounded-lg hover:bg-gray-200 transition" title="Share file" data-file-name="${file.name}">
                             📤
                         </button>
                     </div>
                 </div>
             `;
+
+            // Add event listener to preview button
+            const previewBtn = card.querySelector('.preview-btn');
+            if (previewBtn) {
+                previewBtn.addEventListener('click', function() {
+                    const fileId = this.getAttribute('data-file-id');
+                    const fileData = filesData.find(f => f.id == fileId);
+                    if (fileData) {
+                        showFilePreview(fileData);
+                    }
+                });
+            }
 
             // Add event listener to share button
             const shareBtn = card.querySelector('.share-btn');
@@ -793,6 +1048,130 @@
             }
 
             return card;
+        }
+
+        function showFilePreview(file) {
+            const previewModal = document.getElementById('preview-modal');
+            const previewTitle = document.getElementById('preview-title');
+            const previewContent = document.getElementById('preview-content');
+            
+            previewTitle.textContent = file.name;
+            previewContent.innerHTML = '';
+            
+            // Disable body scroll
+            document.body.style.overflow = 'hidden';
+            
+            // Show modal
+            previewModal.classList.add('show');
+            
+            // Generate preview based on file type
+            switch (file.fileType) {
+                case 'javascript':
+                case 'python':
+                case 'css':
+                case 'html':
+                    showCodePreview(file, previewContent);
+                    break;
+                case 'image':
+                    showImagePreview(file, previewContent);
+                    break;
+                case 'pdf':
+                    showPdfPreview(file, previewContent);
+                    break;
+                case 'video':
+                    showVideoPreview(file, previewContent);
+                    break;
+                case 'text':
+                    showTextPreview(file, previewContent);
+                    break;
+                default:
+                    showDefaultPreview(file, previewContent);
+            }
+        }
+
+        function showCodePreview(file, container) {
+            const codeLanguage = file.fileType === 'javascript' ? 'javascript' : 
+                               file.fileType === 'python' ? 'python' : 
+                               file.fileType === 'css' ? 'css' : 'html';
+            
+            container.innerHTML = `
+                <div class="code-preview">
+                    <div class="code-header">
+                        <span class="code-language">${codeLanguage.toUpperCase()}</span>
+                        <div class="code-actions">
+                            <button class="copy-btn" id="copy-code-btn">📋 Copy</button>
+                            <button class="code-action-btn">🔍 Fullscreen</button>
+                        </div>
+                    </div>
+                    <pre><code class="language-${codeLanguage}">${escapeHtml(file.content)}</code></pre>
+                </div>
+            `;
+            
+            // Highlight code
+            Prism.highlightAll();
+            
+            // Add copy functionality
+            const copyBtn = document.getElementById('copy-code-btn');
+            copyBtn.addEventListener('click', function() {
+                navigator.clipboard.writeText(file.content).then(() => {
+                    this.textContent = '✓ Copied';
+                    this.classList.add('copied');
+                    setTimeout(() => {
+                        this.textContent = '📋 Copy';
+                        this.classList.remove('copied');
+                    }, 2000);
+                });
+            });
+        }
+
+        function showImagePreview(file, container) {
+            container.innerHTML = `
+                <div class="image-preview">
+                    <img src="${file.url}" alt="${file.name}">
+                </div>
+            `;
+        }
+
+        function showPdfPreview(file, container) {
+            container.innerHTML = `
+                <iframe src="${file.url}" class="pdf-preview" title="${file.name}"></iframe>
+            `;
+        }
+
+        function showVideoPreview(file, container) {
+            container.innerHTML = `
+                <video controls class="video-preview">
+                    <source src="${file.url}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            `;
+        }
+
+        function showTextPreview(file, container) {
+            container.innerHTML = `
+                <div class="text-preview">${escapeHtml(file.content)}</div>
+            `;
+        }
+
+        function showDefaultPreview(file, container) {
+            container.innerHTML = `
+                <div class="text-center py-8">
+                    <p class="text-gray-600 mb-4">Preview not available for this file type.</p>
+                    <a href="${file.url}" target="_blank" class="btn-primary">Download File</a>
+                </div>
+            `;
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            
+            return text.replace(/[&<>"']/g, m => map[m]);
         }
 
         function updatePaginationInfo() {
